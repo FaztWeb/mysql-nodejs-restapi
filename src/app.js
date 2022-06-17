@@ -1,29 +1,25 @@
-const http = require('http');
-const path = require('path');
+import express from "express";
+import morgan from "morgan";
+import { dirname, join} from 'path'
+import {fileURLToPath} from 'url'
 
-const express = require('express');
-const morgan = require('morgan');
-const bodyParser = require('body-parser');
+import { PORT } from "./config.js";
+import UserRoutes from "./routes/users.routes.js";
+
+// Initialization
 const app = express();
-
-const user = require('./routes/user');
-
-// settings
-app.set('port', process.env.PORT || 3000);
-app.set('views', path.join(__dirname, 'views'));
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // middlewares
-app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+app.use(morgan("dev"));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // routes
-require('./routes/user')(app);
+app.use(UserRoutes);
 
 // static files
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(join(__dirname, "public")));
 
-http.createServer(app)
-  .listen(app.get('port'), () => {
-    console.log('server on port', app.get('port'));
-  });
+app.listen(PORT);
+console.log("server on port", PORT);

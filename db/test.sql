@@ -1,4 +1,4 @@
-CREATE DATABASE testapirest;
+CREATE DATABASE test;
 
 USE test;
 
